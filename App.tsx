@@ -30,8 +30,8 @@ const App: React.FC<AppProps> = ({ customLayoutConfig }) => {
             h-full w-full p-4 md:p-6 gap-3 md:gap-4
             grid grid-flow-dense transition-all duration-500 ease-in-out
             ${selectedId
-              ? 'grid-cols-5 grid-rows-3'
-              : 'grid-cols-2 md:grid-cols-5 grid-rows-4 md:grid-rows-3'
+              ? 'grid-cols-7 grid-rows-5'
+              : 'grid-cols-2 md:grid-cols-7 grid-rows-6 md:grid-rows-5'
             }
           `}
         >

@@ -26,12 +26,12 @@ const mosaicSpanClasses: Record<TileSize, { cols: number; rows: number }> = {
   [TileSize.ExtraWide]: { cols: 3, rows: 1 },
 };
 
-// Class lookup tables
+// Class lookup tables - support up to 7 columns and 5 rows
 const colClasses: Record<number, string> = {
-  1: 'col-span-1', 2: 'col-span-2', 3: 'col-span-3', 4: 'col-span-4', 5: 'col-span-5',
+  1: 'col-span-1', 2: 'col-span-2', 3: 'col-span-3', 4: 'col-span-4', 5: 'col-span-5', 6: 'col-span-6', 7: 'col-span-7',
 };
 const rowClasses: Record<number, string> = {
-  1: 'row-span-1', 2: 'row-span-2', 3: 'row-span-3',
+  1: 'row-span-1', 2: 'row-span-2', 3: 'row-span-3', 4: 'row-span-4', 5: 'row-span-5',
 };
 
 export const Tile: React.FC<TileProps> = ({
