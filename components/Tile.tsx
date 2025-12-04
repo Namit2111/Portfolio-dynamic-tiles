@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PortfolioItem, TileSize } from '../types';
+import { PortfolioItem, TileSize, TileLayout } from '../types';
 import { ArrowUpRight, X, Mail, MapPin } from 'lucide-react';
 import { ChatInterface } from './ChatInterface';
 import { GitHubContributions } from './GitHubContributions';
@@ -9,34 +9,75 @@ import { PROJECTS, GALLERY_IMAGES } from '../constants';
 
 interface TileProps {
   item: PortfolioItem;
+  index: number;
   onClick: (id: string) => void;
   onClose: () => void;
   isSelected: boolean;
   isSpotlightActive: boolean;
+  customLayout?: TileLayout; // Custom layout from config (overrides auto)
 }
 
 // Default Mosaic Layout Classes
-const mosaicSpanClasses: Record<TileSize, string> = {
-  [TileSize.Small]: 'col-span-1 row-span-1',
-  [TileSize.Tall]: 'col-span-1 row-span-2',
-  [TileSize.Wide]: 'col-span-2 row-span-1',
-  [TileSize.Large]: 'col-span-2 row-span-2',
-  [TileSize.ExtraWide]: 'col-span-2 row-span-1', // Will expand when selected
+const mosaicSpanClasses: Record<TileSize, { cols: number; rows: number }> = {
+  [TileSize.Small]: { cols: 1, rows: 1 },
+  [TileSize.Tall]: { cols: 1, rows: 2 },
+  [TileSize.Wide]: { cols: 2, rows: 1 },
+  [TileSize.Large]: { cols: 2, rows: 2 },
+  [TileSize.ExtraWide]: { cols: 3, rows: 1 },
 };
 
-export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, isSpotlightActive }) => {
+// Class lookup tables
+const colClasses: Record<number, string> = {
+  1: 'col-span-1', 2: 'col-span-2', 3: 'col-span-3', 4: 'col-span-4', 5: 'col-span-5',
+};
+const rowClasses: Record<number, string> = {
+  1: 'row-span-1', 2: 'row-span-2', 3: 'row-span-3',
+};
 
-  // Determine grid classes based on state
-  let gridClasses = mosaicSpanClasses[item.size]; // Default Mosaic
+export const Tile: React.FC<TileProps> = ({
+  item, index, onClick, onClose, isSelected, isSpotlightActive, customLayout
+}) => {
+  // Determine layout: custom config > auto calculation > default size
+  let cols: number;
+  let rows: number;
 
-  if (isSpotlightActive) {
+  if (customLayout) {
+    // USE CUSTOM LAYOUT FROM CONFIG
+    cols = customLayout.cols;
+    rows = customLayout.rows;
+  } else if (isSpotlightActive) {
+    // AUTO CALCULATION (fallback if no custom config)
     if (isSelected) {
-      // Expanded Spotlight Tile - takes up most of the space
-      gridClasses = 'col-span-3 md:col-span-4 row-span-4 md:row-span-4';
+      cols = item.expandedCols || 4;
+      rows = item.expandedRows || 2;
     } else {
-      // Minimized tiles - shrink to 1x1
-      gridClasses = 'col-span-1 row-span-1';
+      cols = 1;
+      rows = 1;
     }
+  } else {
+    // DEFAULT: use tile's TileSize
+    const defaultSize = mosaicSpanClasses[item.size];
+    cols = defaultSize.cols;
+    rows = defaultSize.rows;
+  }
+
+  const gridClasses = `${colClasses[cols] || 'col-span-1'} ${rowClasses[rows] || 'row-span-1'}`;
+
+  // Build inline styles for positioning
+  const positionStyle: React.CSSProperties = {
+    backgroundColor: item.color,
+    color: item.textColor === 'white' ? '#fff' : '#000',
+  };
+
+  // Add exact grid positioning if specified in customLayout
+  if (customLayout?.colStart) {
+    positionStyle.gridColumnStart = customLayout.colStart;
+  }
+  if (customLayout?.rowStart) {
+    positionStyle.gridRowStart = customLayout.rowStart;
+  }
+  if (customLayout?.order !== undefined) {
+    positionStyle.order = customLayout.order;
   }
 
   return (
@@ -44,9 +85,9 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
       layout
       layoutId={`tile-${item.id}`}
       onClick={() => !isSelected && onClick(item.id)}
-      className={`relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden cursor-pointer shadow-lg transition-shadow duration-300 ${gridClasses} ${!isSelected && isSpotlightActive ? 'opacity-90 hover:opacity-100' : ''
+      className={`relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden cursor-pointer shadow-lg transition-shadow duration-300 ${gridClasses} ${!isSelected && isSpotlightActive ? 'opacity-80 hover:opacity-100' : ''
         }`}
-      style={{ backgroundColor: item.color, color: item.textColor === 'white' ? '#fff' : '#000' }}
+      style={positionStyle}
       whileHover={!isSelected ? { scale: 1.02, zIndex: 10 } : {}}
       transition={{
         type: 'spring',
@@ -55,22 +96,16 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
         layout: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }
       }}
     >
-      {/* Tile Content Wrapper */}
       <div className={`h-full w-full flex flex-col p-4 md:p-6 ${isSelected ? 'overflow-hidden' : ''}`}>
 
-        {/* Header: Always visible but changes layout */}
-        <motion.div
-          layout="position"
-          className="flex justify-between items-start mb-2 md:mb-4"
-        >
+        {/* Header */}
+        <motion.div layout="position" className="flex justify-between items-start mb-2 md:mb-4">
           <div className={`p-2 rounded-xl backdrop-blur-sm ${item.textColor === 'white' ? 'bg-white/20' : 'bg-black/10'}`}>
             {item.icon}
           </div>
 
           {!isSelected ? (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
               className={`rounded-full p-2 ${item.textColor === 'white' ? 'bg-white text-black' : 'bg-black text-white'}`}
             >
               <ArrowUpRight className="w-4 h-4" />
@@ -79,8 +114,8 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
             <motion.button
               onClick={(e) => { e.stopPropagation(); onClose(); }}
               className={`rounded-full p-2 backdrop-blur-md transition-colors ${item.textColor === 'white'
-                  ? 'bg-white/20 hover:bg-white/30 text-white'
-                  : 'bg-black/10 hover:bg-black/20 text-black'
+                ? 'bg-white/20 hover:bg-white/30 text-white'
+                : 'bg-black/10 hover:bg-black/20 text-black'
                 }`}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -91,21 +126,15 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
           )}
         </motion.div>
 
-        {/* Title Area */}
+        {/* Title Area - show subtitle/title only if tile is big enough */}
         <motion.div layout="position" className="mb-2">
-          {(!isSpotlightActive || isSelected) && (
-            <motion.h4
-              layout="position"
-              className={`text-xs md:text-sm font-bold tracking-widest uppercase mb-1 opacity-60`}
-            >
+          {(cols >= 1 || !isSpotlightActive || isSelected) && (
+            <motion.h4 className="text-xs md:text-sm font-bold tracking-widest uppercase mb-1 opacity-60">
               {item.subtitle}
             </motion.h4>
           )}
-          {(!isSpotlightActive || isSelected) && (
-            <motion.h2
-              layout="position"
-              className={`font-display font-extrabold leading-none ${isSelected ? 'text-3xl md:text-5xl mb-4 md:mb-6' : 'text-xl md:text-3xl'}`}
-            >
+          {(cols >= 1 || !isSpotlightActive || isSelected) && (
+            <motion.h2 className={`font-display font-extrabold leading-none ${isSelected ? 'text-2xl md:text-4xl mb-4' : 'text-xl md:text-3xl'}`}>
               {item.title}
             </motion.h2>
           )}
@@ -125,16 +154,13 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
 
                 {item.contentType === 'text' && (
                   <div className="prose prose-lg max-w-none">
-                    <p className={`whitespace-pre-wrap text-base md:text-lg leading-relaxed ${item.textColor === 'white' ? 'text-white/90' : 'text-black/80'}`}>
+                    <p className={`whitespace-pre-wrap text-sm md:text-base leading-relaxed ${item.textColor === 'white' ? 'text-white/90' : 'text-black/80'}`}>
                       {item.description}
                     </p>
-
                     {item.id === 'skills' && (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 mt-6 md:mt-8">
-                        {['React', 'TypeScript', 'Tailwind', 'Node.js', 'Framer Motion', 'Three.js', 'PostgreSQL', 'Python', 'Gemini API'].map(skill => (
-                          <div key={skill} className={`p-2 md:p-3 rounded-lg text-center text-xs md:text-sm font-bold border ${item.textColor === 'white'
-                              ? 'bg-white/10 border-white/20 text-white'
-                              : 'bg-black/5 border-black/10 text-black'
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
+                        {['React', 'TypeScript', 'Tailwind', 'Node.js', 'Framer Motion', 'Three.js'].map(skill => (
+                          <div key={skill} className={`p-2 rounded-lg text-center text-xs font-bold border ${item.textColor === 'white' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
                             }`}>
                             {skill}
                           </div>
@@ -145,16 +171,15 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
                 )}
 
                 {item.contentType === 'projects' && (
-                  <div className="space-y-3 md:space-y-4">
-                    {PROJECTS.map(project => (
-                      <div key={project.id} className="group flex flex-col md:flex-row gap-3 md:gap-4 bg-white/40 backdrop-blur-md p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/20 hover:bg-white/50 transition-colors">
-                        <div className="w-full md:w-36 h-24 md:h-28 rounded-lg md:rounded-xl overflow-hidden shadow-sm flex-shrink-0">
-                          <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="space-y-2">
+                    {PROJECTS.slice(0, 2).map(project => (
+                      <div key={project.id} className="flex gap-3 bg-white/40 backdrop-blur-md p-2 rounded-xl border border-white/20">
+                        <div className="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                          <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
                         </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                          <h3 className="text-lg md:text-xl font-bold text-black mb-1">{project.title}</h3>
-                          <span className="text-xs font-bold text-black/60 uppercase tracking-wide">{project.category}</span>
-                          <p className="text-xs md:text-sm text-black/80 mt-2 line-clamp-2">{project.desc}</p>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-bold text-black">{project.title}</h3>
+                          <span className="text-xs text-black/60">{project.category}</span>
                         </div>
                       </div>
                     ))}
@@ -162,36 +187,33 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
                 )}
 
                 {item.contentType === 'chat' && (
-                  <div className="h-full min-h-[300px] md:min-h-[400px]">
+                  <div className="h-full min-h-[200px]">
                     <ChatInterface />
                   </div>
                 )}
 
                 {item.contentType === 'gallery' && (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-                    {GALLERY_IMAGES.map((src, i) => (
-                      <div key={i} className="rounded-lg md:rounded-xl overflow-hidden aspect-square border-2 border-white/20 shadow-md">
-                        <img src={src} alt="Gallery" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+                  <div className="grid grid-cols-3 gap-2">
+                    {GALLERY_IMAGES.slice(0, 6).map((src, i) => (
+                      <div key={i} className="rounded-lg overflow-hidden aspect-square">
+                        <img src={src} alt="Gallery" className="w-full h-full object-cover" />
                       </div>
                     ))}
                   </div>
                 )}
 
                 {item.contentType === 'contact' && (
-                  <div className="flex flex-col h-full justify-center space-y-6 md:space-y-8">
-                    <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${item.textColor === 'white' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'}`}>
-                      <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-                        <Mail className="w-5 h-5 md:w-6 md:h-6" />
-                        <span className="text-base md:text-xl font-medium">hello@lumina-portfolio.dev</span>
+                  <div className="space-y-3">
+                    <div className={`p-3 rounded-xl border ${item.textColor === 'white' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Mail className="w-4 h-4" />
+                        <span className="text-sm">hello@portfolio.dev</span>
                       </div>
-                      <div className="flex items-center gap-3 md:gap-4">
-                        <MapPin className="w-5 h-5 md:w-6 md:h-6" />
-                        <span className="text-base md:text-xl font-medium">San Francisco, CA</span>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">San Francisco, CA</span>
                       </div>
                     </div>
-                    <button className="w-full bg-black text-white hover:bg-neutral-800 font-bold text-base md:text-lg p-3 md:p-4 rounded-xl transition-transform hover:scale-[1.02] active:scale-[0.98]">
-                      Send Me an Email
-                    </button>
                   </div>
                 )}
 
@@ -206,7 +228,6 @@ export const Tile: React.FC<TileProps> = ({ item, onClick, onClose, isSelected, 
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
     </motion.div>
   );

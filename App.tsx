@@ -2,13 +2,24 @@ import React, { useState } from 'react';
 import { motion, LayoutGroup } from 'framer-motion';
 import { Tile } from './components/Tile';
 import { PORTFOLIO_ITEMS } from './constants';
+import { LAYOUT_CONFIG } from './layoutConfig';
+import { LayoutConfig } from './types';
 
-const App: React.FC = () => {
+interface AppProps {
+  // Optional: pass custom layout config to override the default
+  customLayoutConfig?: LayoutConfig;
+}
+
+const App: React.FC<AppProps> = ({ customLayoutConfig }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // Layout Configuration
-  // Default: Standard Mosaic Grid
-  // Spotlight: Expanded tile grows, others shrink but stay visible
+  // Use custom config if provided, otherwise use the default
+  const layoutConfig = customLayoutConfig || LAYOUT_CONFIG;
+
+  // Get the current layout based on selected tile
+  const currentLayout = selectedId
+    ? layoutConfig[selectedId]
+    : layoutConfig.default;
 
   return (
     <div className="h-screen w-screen bg-[#111] text-neutral-100 font-sans selection:bg-white/30 overflow-hidden">
@@ -17,21 +28,23 @@ const App: React.FC = () => {
           layout
           className={`
             h-full w-full p-4 md:p-6 gap-3 md:gap-4
-            grid transition-all duration-500 ease-in-out
+            grid grid-flow-dense transition-all duration-500 ease-in-out
             ${selectedId
-              ? 'grid-cols-4 md:grid-cols-5 grid-rows-4 md:grid-rows-4' // Spotlight Mode Grid
-              : 'grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-3' // Default Mosaic Grid
+              ? 'grid-cols-5 grid-rows-3'
+              : 'grid-cols-2 md:grid-cols-5 grid-rows-4 md:grid-rows-3'
             }
           `}
         >
-          {PORTFOLIO_ITEMS.map((item) => (
+          {PORTFOLIO_ITEMS.map((item, index) => (
             <Tile
               key={item.id}
               item={item}
+              index={index}
               onClick={setSelectedId}
               onClose={() => setSelectedId(null)}
               isSelected={selectedId === item.id}
               isSpotlightActive={!!selectedId}
+              customLayout={currentLayout?.[item.id]}
             />
           ))}
         </motion.div>
