@@ -19,51 +19,54 @@ import { LayoutConfig } from './types';
 
 export const LAYOUT_CONFIG: LayoutConfig = {
     // DEFAULT BENTO LAYOUT (nothing expanded)
-    default: {
-        github: { cols: 2, rows: 2, colStart: 1, rowStart: 1 },  // Top-left square
-        about: { cols: 3, rows: 3, colStart: 3, rowStart: 1 },  // Center hero (large)
-        featured: { cols: 2, rows: 3, colStart: 6, rowStart: 1 },  // Right tall
-        projects: { cols: 2, rows: 2, colStart: 1, rowStart: 3 },  // Left middle square
-        skills: { cols: 1, rows: 1, colStart: 3, rowStart: 4 },  // Small
-        experience: { cols: 2, rows: 1, colStart: 4, rowStart: 4 },  // Wide small
-        contact: { cols: 2, rows: 2, colStart: 6, rowStart: 4 },  // Bottom-right square
-        resume: { cols: 3, rows: 1, colStart: 1, rowStart: 5 },  // Bottom-left wide
-        playground: { cols: 2, rows: 1, colStart: 4, rowStart: 5 },  // Bottom center
-    },
-
+default: {
+  projects: { cols: 3, rows: 2, colStart: 1, rowStart: 1 },      // Top-left (Green Work)
+  about: { cols: 2, rows: 3, colStart: 3, rowStart: 3 },         // CENTER HERO - Vertical Long (Red)
+  github: { cols: 3, rows: 2, colStart: 4, rowStart: 1 },        // Top-right (Dark GitHub)
+  
+  featured: { cols: 2, rows: 2, colStart: 1, rowStart: 3 },      // Middle-left (Coral Featured)
+  skills: { cols: 1, rows: 4, colStart: 7, rowStart: 1 },        // Middle-right top (Yellow Stack)
+  
+  experience: { cols: 2, rows: 2, colStart: 5, rowStart: 4 },    // CENTER BOTTOM - Horizontal Long (Purple Career)
+  playground: { cols: 1, rows: 1, colStart: 7, rowStart: 5 },    // Middle-right bottom (Blue Playground)
+  
+  resume: { cols: 2, rows: 1, colStart: 1, rowStart: 5 },        // Bottom-left (Gray CV)
+  contact: { cols: 2, rows: 1, colStart: 5, rowStart: 3 },       // Bottom-right (White Hire Me)
+},
     // GITHUB EXPANDED (5x4)
-    github: {
-        github: { cols: 5, rows: 4, colStart: 1, rowStart: 1 },
-        about: { cols: 1, rows: 1, colStart: 6, rowStart: 1 },
-        featured: { cols: 1, rows: 1, colStart: 7, rowStart: 1 },
-        projects: { cols: 1, rows: 1, colStart: 6, rowStart: 2 },
-        skills: { cols: 1, rows: 1, colStart: 7, rowStart: 2 },
-        experience: { cols: 1, rows: 1, colStart: 6, rowStart: 3 },
-        contact: { cols: 1, rows: 1, colStart: 7, rowStart: 3 },
-        resume: { cols: 1, rows: 1, colStart: 6, rowStart: 4 },
-        playground: { cols: 1, rows: 1, colStart: 7, rowStart: 4 },
+    featured: {
+        featured: { cols: 5, rows: 4, colStart: 1, rowStart: 2 },
+        about: { cols: 2, rows: 1, colStart: 4, rowStart: 1 },
+        github: { cols: 1, rows: 2, colStart: 7, rowStart: 3 },
+        contact: { cols: 1, rows: 1, colStart: 6, rowStart: 3 },
+        skills: { cols: 2, rows: 2, colStart: 6, rowStart: 1 },
+        experience: { cols: 2, rows: 1, colStart: 1, rowStart: 1 },
+        playground: { cols: 1, rows: 1, colStart: 6, rowStart: 4 },
+        resume: { cols: 1, rows: 1, colStart: 3, rowStart: 1},
+        projects: { cols: 2, rows: 1, colStart: 6, rowStart: 5 },
+        
     },
 
     // ABOUT ME EXPANDED (5x4) - center hero
     about: {
-        about: { cols: 5, rows: 4, colStart: 2, rowStart: 1 },
-        github: { cols: 1, rows: 2, colStart: 1, rowStart: 1 },
+        about: { cols: 5, rows: 4, colStart: 2, rowStart: 2 },
+        experience: { cols: 1, rows: 3, colStart: 1, rowStart: 1 },
         featured: { cols: 1, rows: 2, colStart: 7, rowStart: 1 },
-        projects: { cols: 1, rows: 2, colStart: 1, rowStart: 3 },
+        projects: { cols: 1, rows: 2, colStart: 1, rowStart: 4 },
         skills: { cols: 1, rows: 2, colStart: 7, rowStart: 3 },
-        experience: { cols: 2, rows: 1, colStart: 1, rowStart: 5 },
-        contact: { cols: 2, rows: 1, colStart: 3, rowStart: 5 },
-        resume: { cols: 2, rows: 1, colStart: 5, rowStart: 5 },
+        github: { cols: 2, rows: 1, colStart: 2, rowStart: 1 },
+        contact: { cols: 1, rows: 1, colStart: 4, rowStart: 1 },
+        resume: { cols: 2, rows: 1, colStart: 5, rowStart: 1 },
         playground: { cols: 1, rows: 1, colStart: 7, rowStart: 5 },
     },
 
     // FEATURED PROJECT EXPANDED (5x4)
-    featured: {
-        featured: { cols: 5, rows: 4, colStart: 3, rowStart: 1 },
+    skills: {
+        skills: { cols: 5, rows: 4, colStart: 3, rowStart: 1 },
         github: { cols: 1, rows: 2, colStart: 1, rowStart: 1 },
         about: { cols: 1, rows: 2, colStart: 2, rowStart: 1 },
         projects: { cols: 1, rows: 2, colStart: 1, rowStart: 3 },
-        skills: { cols: 1, rows: 2, colStart: 2, rowStart: 3 },
+        featured: { cols: 1, rows: 2, colStart: 2, rowStart: 3 },
         experience: { cols: 2, rows: 1, colStart: 1, rowStart: 5 },
         contact: { cols: 2, rows: 1, colStart: 3, rowStart: 5 },
         resume: { cols: 2, rows: 1, colStart: 5, rowStart: 5 },
@@ -73,20 +76,20 @@ export const LAYOUT_CONFIG: LayoutConfig = {
     // PROJECTS EXPANDED (5x4)
     projects: {
         projects: { cols: 5, rows: 4, colStart: 1, rowStart: 1 },
-        github: { cols: 1, rows: 1, colStart: 6, rowStart: 1 },
-        about: { cols: 1, rows: 1, colStart: 7, rowStart: 1 },
-        featured: { cols: 1, rows: 1, colStart: 6, rowStart: 2 },
-        skills: { cols: 1, rows: 1, colStart: 7, rowStart: 2 },
-        experience: { cols: 1, rows: 1, colStart: 6, rowStart: 3 },
-        contact: { cols: 1, rows: 1, colStart: 7, rowStart: 3 },
-        resume: { cols: 1, rows: 1, colStart: 6, rowStart: 4 },
-        playground: { cols: 1, rows: 1, colStart: 7, rowStart: 4 },
+        github: { cols: 3, rows: 1, colStart: 1, rowStart: 5 },
+        about: { cols: 2, rows: 2, colStart: 6, rowStart: 1 },
+        featured: { cols: 1, rows: 1, colStart: 6, rowStart: 3 },
+        skills: { cols: 1, rows: 2, colStart: 7, rowStart: 3 },
+        experience: { cols: 2, rows: 1, colStart: 5, rowStart: 5 },
+        contact: { cols: 1, rows: 1, colStart: 6, rowStart: 4 },
+        resume: { cols: 1, rows: 1, colStart: 4, rowStart: 5},
+        playground: { cols: 1, rows: 1, colStart: 7, rowStart: 5 },
     },
 
     // SKILLS EXPANDED (5x4)
-    skills: {
-        skills: { cols: 5, rows: 4, colStart: 2, rowStart: 1 },
-        github: { cols: 1, rows: 2, colStart: 1, rowStart: 1 },
+    github: {
+        github: { cols: 5, rows: 4, colStart: 2, rowStart: 1 },
+        skills: { cols: 1, rows: 2, colStart: 1, rowStart: 1 },
         about: { cols: 1, rows: 2, colStart: 7, rowStart: 1 },
         featured: { cols: 1, rows: 2, colStart: 1, rowStart: 3 },
         projects: { cols: 1, rows: 2, colStart: 7, rowStart: 3 },
@@ -98,7 +101,7 @@ export const LAYOUT_CONFIG: LayoutConfig = {
 
     // EXPERIENCE EXPANDED (5x4)
     experience: {
-        experience: { cols: 5, rows: 4, colStart: 2, rowStart: 1 },
+        experience: { cols: 6, rows: 4, colStart: 2, rowStart: 1 },
         github: { cols: 1, rows: 2, colStart: 1, rowStart: 1 },
         about: { cols: 1, rows: 2, colStart: 7, rowStart: 1 },
         featured: { cols: 1, rows: 2, colStart: 1, rowStart: 3 },
@@ -124,27 +127,28 @@ export const LAYOUT_CONFIG: LayoutConfig = {
 
     // RESUME EXPANDED (5x4)
     resume: {
-        resume: { cols: 5, rows: 4, colStart: 1, rowStart: 1 },
-        github: { cols: 1, rows: 1, colStart: 6, rowStart: 1 },
-        about: { cols: 1, rows: 1, colStart: 7, rowStart: 1 },
-        featured: { cols: 1, rows: 1, colStart: 6, rowStart: 2 },
-        projects: { cols: 1, rows: 1, colStart: 7, rowStart: 2 },
-        skills: { cols: 1, rows: 1, colStart: 6, rowStart: 3 },
-        experience: { cols: 1, rows: 1, colStart: 7, rowStart: 3 },
-        contact: { cols: 1, rows: 1, colStart: 6, rowStart: 4 },
-        playground: { cols: 1, rows: 1, colStart: 7, rowStart: 4 },
+        resume: { cols: 5, rows: 4, colStart: 1, rowStart: 2 },
+        about: { cols: 2, rows: 1, colStart: 3, rowStart: 1 },
+        github: { cols: 1, rows: 2, colStart: 7, rowStart: 3 },
+        featured: { cols: 1, rows: 1, colStart: 6, rowStart: 3 },
+        skills: { cols: 2, rows: 2, colStart: 6, rowStart: 1 },
+        experience: { cols: 2, rows: 1, colStart: 1, rowStart: 1 },
+        playground: { cols: 1, rows: 1, colStart: 6, rowStart: 4 },
+        contact: { cols: 1, rows: 1, colStart: 5, rowStart: 1},
+        projects: { cols: 2, rows: 1, colStart: 6, rowStart: 5 },
     },
+
 
     // PLAYGROUND EXPANDED (5x4)
     playground: {
-        playground: { cols: 5, rows: 4, colStart: 3, rowStart: 1 },
-        github: { cols: 1, rows: 2, colStart: 1, rowStart: 1 },
-        about: { cols: 1, rows: 2, colStart: 2, rowStart: 1 },
-        featured: { cols: 1, rows: 2, colStart: 1, rowStart: 3 },
-        projects: { cols: 1, rows: 2, colStart: 2, rowStart: 3 },
-        skills: { cols: 2, rows: 1, colStart: 1, rowStart: 5 },
-        experience: { cols: 2, rows: 1, colStart: 3, rowStart: 5 },
-        contact: { cols: 2, rows: 1, colStart: 5, rowStart: 5 },
-        resume: { cols: 1, rows: 1, colStart: 7, rowStart: 5 },
+        playground: { cols: 5, rows: 4, colStart: 3, rowStart: 2 },
+        github: { cols: 1, rows: 2, colStart: 1, rowStart: 2 },
+        about: { cols: 1, rows: 2, colStart: 2, rowStart: 2 },
+        featured: { cols: 1, rows: 2, colStart: 1, rowStart: 4 },
+        projects: { cols: 1, rows: 2, colStart: 2, rowStart: 4 },
+        skills: { cols: 2, rows: 1, colStart: 1, rowStart: 1 },
+        experience: { cols: 2, rows: 1, colStart: 3, rowStart: 1 },
+        contact: { cols: 2, rows: 1, colStart: 5, rowStart: 1 },
+        resume: { cols: 1, rows: 1, colStart: 7, rowStart: 1 },
     },
 };
