@@ -85,7 +85,7 @@ export const Tile: React.FC<TileProps> = ({
       layout
       layoutId={`tile-${item.id}`}
       onClick={() => !isSelected && onClick(item.id)}
-      className={`relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden cursor-pointer shadow-lg transition-shadow duration-300 ${gridClasses} ${!isSelected && isSpotlightActive ? 'opacity-80 hover:opacity-100' : ''
+      className={`relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden cursor-pointer shadow-lg transition-shadow duration-300 group ${gridClasses} ${!isSelected && isSpotlightActive ? 'opacity-80 hover:opacity-100' : ''
         }`}
       style={positionStyle}
       whileHover={!isSelected ? { scale: 1.02, zIndex: 10 } : {}}
@@ -98,14 +98,19 @@ export const Tile: React.FC<TileProps> = ({
     >
       <div className={`h-full w-full flex flex-col p-4 md:p-6 ${isSelected ? 'overflow-hidden' : ''}`}>
 
-        {/* Header */}
-        <motion.div layout="position" className="flex justify-between items-start mb-2 md:mb-4">
-          <div className={`p-2 rounded-xl backdrop-blur-sm ${item.textColor === 'white' ? 'bg-white/20' : 'bg-black/10'}`}>
+        {/* HEADER AREA */}
+        <motion.div layout="position" className="flex justify-between items-start mb-2 relative z-10">
+          <div className={`
+             backdrop-blur-md rounded-xl p-2.5 transition-colors duration-300
+             ${item.textColor === 'white' ? 'bg-white/10 group-hover:bg-white/20' : 'bg-black/5 group-hover:bg-black/10'}
+          `}>
             {item.icon}
           </div>
 
           {!isSelected ? (
             <motion.div
+              initial={{ opacity: 0.6 }}
+              whileHover={{ opacity: 1, scale: 1.1 }}
               className={`rounded-full p-2 ${item.textColor === 'white' ? 'bg-white text-black' : 'bg-black text-white'}`}
             >
               <ArrowUpRight className="w-4 h-4" />
@@ -126,19 +131,60 @@ export const Tile: React.FC<TileProps> = ({
           )}
         </motion.div>
 
-        {/* Title Area - show subtitle/title only if tile is big enough */}
-        <motion.div layout="position" className="mb-2">
-          {(cols >= 1 || !isSpotlightActive || isSelected) && (
-            <motion.h4 className="text-xs md:text-sm font-bold tracking-widest uppercase mb-1 opacity-60">
+        {/* CLOSED STATE CONTENT */}
+        {!isSelected && (
+          <motion.div layout="position" className="flex-1 flex flex-col relative z-10 p-2 md:p-0">
+            {/* SUBTITLE */}
+            <motion.h4 className="text-[10px] md:text-xs font-bold tracking-widest uppercase mb-2 opacity-70">
               {item.subtitle}
             </motion.h4>
-          )}
-          {(cols >= 1 || !isSpotlightActive || isSelected) && (
-            <motion.h2 className={`font-display font-extrabold leading-none ${isSelected ? 'text-2xl md:text-4xl mb-4' : 'text-xl md:text-3xl'}`}>
+
+            {/* TITLE */}
+            <motion.h2 className={`font-display font-extrabold leading-tight break-words ${cols === 1 && rows === 1 ? 'text-lg md:text-xl' :
+                cols === 1 ? 'text-xl md:text-2xl' :
+                  rows === 1 ? 'text-2xl md:text-3xl' :
+                    'text-3xl md:text-5xl'
+              }`}>
               {item.title}
             </motion.h2>
-          )}
-        </motion.div>
+
+            {/* EXTRA CONTEXT FOR LARGE TILES - ONLY SHOW IF ENOUGH SPACE */}
+            {cols >= 2 && rows >= 2 && (
+              <div className="mt-auto">
+                {item.id === 'about' && (
+                  <motion.p className="text-sm font-medium opacity-80 line-clamp-3 leading-relaxed">
+                    Full-stack developer & AI engineer building production-ready apps.
+                  </motion.p>
+                )}
+                {item.id === 'featured' && (
+                  <motion.div className="flex gap-2 flex-wrap">
+                    <span className="text-[10px] bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Tech</span>
+                    <span className="text-[10px] bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Tutorials</span>
+                  </motion.div>
+                )}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* EXPANDED TITLE HEADER */}
+        {isSelected && (
+          <motion.div layout="position" className="mb-4 relative z-10">
+            <motion.h4 className="text-sm font-bold tracking-widest uppercase mb-2 opacity-60">
+              {item.subtitle}
+            </motion.h4>
+            <motion.h2 className="text-3xl md:text-5xl font-display font-extrabold leading-none">
+              {item.title}
+            </motion.h2>
+          </motion.div>
+        )}
+
+        {/* DECORATIVE GRADIENT OVERLAYS */}
+        {!isSelected && (
+          <motion.div
+            className="absolute inset-0 z-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          />
+        )}
 
         {/* EXPANDED CONTENT */}
         <AnimatePresence>

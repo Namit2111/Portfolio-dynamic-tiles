@@ -47,43 +47,41 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: 'music',
     title: 'Music',
-    subtitle: 'namit2111',
+    subtitle: 'Vibes',
     size: TileSize.Large,
-    contentType: 'github',
-    color: '#106305ff',
+    contentType: 'github', // Keeping as placeholder/github for now as no specific music data provided
+    color: '#1DB954', // Spotify Green
     textColor: 'white',
     icon: <Music className="w-8 h-8" />,
     expandedCols: 4,
-    expandedRows: 3,},
+    expandedRows: 3,
+  },
   {
     id: 'about',
-    title: 'Hello.',
+    title: "Hi, I'm Namit",
     subtitle: 'About Me',
     size: TileSize.Large,
     contentType: 'text',
     color: '#E63946',
     textColor: 'white',
     icon: <User className="w-8 h-8" />,
-    description: `I'm Namit, a Creative Developer.
+    description: `I'm a 22-year-old full-stack developer & AI engineer from India.
 
-I build digital experiences that blend performance with artistic design. My work bridges the gap between clean code architecture and immersive micro-interactions.
+I build production-ready applications with modern web technologies and AI integration. Proven track record of delivering 30% performance improvements and processing 2.7M+ data points in production.
 
-Specialized in:
-• React & TypeScript Ecosystems
-• Generative AI Integration
-• WebGL & 3D Web Experiences`,
+Currently working as a Founding Engineer at oncourseAI.`,
     expandedCols: 4,
     expandedRows: 3,
   },
   {
     id: 'featured',
-    title: 'Featured',
-    subtitle: 'Project',
+    title: 'Blog',
+    subtitle: 'Writing',
     size: TileSize.Large,
-    contentType: 'projects',
+    contentType: 'blog',
     color: '#FF6B6B',
     textColor: 'white',
-    icon: <Layers className="w-8 h-8" />,
+    icon: <BookOpen className="w-8 h-8" />,
     expandedCols: 4,
     expandedRows: 3,
   },
@@ -103,13 +101,16 @@ Specialized in:
   {
     id: 'skills',
     title: 'Stack',
-    subtitle: 'Skills',
+    subtitle: 'Expertise',
     size: TileSize.Small,
     contentType: 'text',
     color: '#FFD500',
     textColor: 'black',
     icon: <Code className="w-8 h-8" />,
-    description: "Core: React 18, TypeScript, Tailwind CSS, Next.js\nAnimation: Framer Motion, GSAP, Three.js\nBackend: Node.js, Python, PostgreSQL\nAI: Google Gemini API, OpenAI API, TensorFlow.js",
+    description: `**Frontend**: React.js, Next.js, TypeScript, React Native, Tailwind CSS, Material UI, Redux
+**Backend**: Node.js, Express.js, Python, Flask, FastAPI, GraphQL, MongoDB, PostgreSQL, Redis
+**AI/ML**: Azure OpenAI, LangChain, Hugging Face, Ollama, CrewAI, NLP, Computer Vision, Vector DBs
+**DevOps**: AWS, Docker, GitHub Actions, CI/CD, Git`,
     expandedCols: 4,
     expandedRows: 3,
   },
@@ -122,7 +123,17 @@ Specialized in:
     color: '#6A0DAD',
     textColor: 'white',
     icon: <Briefcase className="w-8 h-8" />,
-    description: "Senior Developer @ TechCo (2022-Present)\nFrontend Lead @ StartupXYZ (2020-2022)\nSoftware Engineer @ Agency (2018-2020)",
+    description: `**Founding Engineer @ oncourseAI** (Jul 2025 - Present)
+Engineered referral system, boosted user acquisition.
+
+**Founding Engineer @ Saathi.app** (Nov 2024 - Jul 2025)
+Architected REST APIs (FastAPI), reduced latency by 40%. Built AI travel assistant.
+
+**GenAI Backend Dev @ Jivus AI** (Aug 2024 - Oct 2024)
+Developed conversational AI agents, increased efficiency by 85%.
+
+**Fullstack Intern @ SalonGO** (Jan 2024 - Apr 2024)
+Built scalable pipelines for 50K+ records.`,
     expandedCols: 4,
     expandedRows: 3,
   },
@@ -148,7 +159,7 @@ Specialized in:
     color: '#24292e',
     textColor: 'white',
     icon: <FileText className="w-8 h-8" />,
-    description: "Download my resume to learn more about my experience and skills.",
+    description: "Check out my full professional background and detailed experience.",
     expandedCols: 4,
     expandedRows: 3,
   },
@@ -169,24 +180,24 @@ Specialized in:
 export const PROJECTS = [
   {
     id: 1,
-    title: "Neon Banking",
-    category: "Fintech Web App",
-    image: "https://picsum.photos/id/20/600/400",
-    desc: "A real-time banking dashboard with 3D data visualization using Three.js and D3."
+    title: "Saathi.app",
+    category: "AI Travel Assistant",
+    image: "https://picsum.photos/id/20/600/400", // Keeping placeholder but would be good to update if user provides
+    desc: "AI-powered travel assistant using LLMs, multi-agent pipelines, and FastAPI."
   },
   {
     id: 2,
-    title: "Aura Health",
-    category: "Mobile Application",
+    title: "Jivus AI",
+    category: "Conversational AI",
     image: "https://picsum.photos/id/26/600/400",
-    desc: "Meditation and wellness tracker built with React Native and Reanimated."
+    desc: "Real-time AI agents increasing service efficiency by 85% using Azure OpenAI."
   },
   {
     id: 3,
-    title: "Nexus AI",
-    category: "Generative Interface",
+    title: "SalonGO",
+    category: "SaaS Platform",
     image: "https://picsum.photos/id/60/600/400",
-    desc: "A multimodal AI workspace integrating text, image, and video generation."
+    desc: "Scalable booking platform handling 50K+ records with automated validation."
   }
 ];
 
