@@ -196,7 +196,7 @@ export const Tile: React.FC<TileProps> = ({
       onClick={handleTileClick}
       className={`relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden cursor-pointer shadow-lg transition-shadow duration-300 group ${gridClasses} ${!isSelected && isSpotlightActive ? 'opacity-80 hover:opacity-100' : ''
         }`}
-      style={positionStyle}
+      style={{ ...positionStyle, transformOrigin: 'top' }}
       whileHover={!isSelected ? { scale: 1.02, zIndex: 10 } : {}}
       transition={{
         type: 'spring',
@@ -207,8 +207,17 @@ export const Tile: React.FC<TileProps> = ({
     >
       <div className={`h-full w-full flex flex-col p-4 md:p-6 ${isSelected ? 'overflow-hidden' : ''}`}>
 
-        {/* HEADER AREA */}
-        <motion.div layout="position" className="flex justify-between items-start mb-2 relative z-10">
+        {/* HEADER AREA - Click to close if open */}
+        <motion.div
+          layout="position"
+          className="flex justify-between items-start mb-2 relative z-20"
+          onClick={(e) => {
+            if (isSelected) {
+              e.stopPropagation();
+              onClose();
+            }
+          }}
+        >
           <div className={`
              backdrop-blur-md rounded-xl p-2.5 transition-colors duration-300
              ${item.textColor === 'white' ? 'bg-white/10 group-hover:bg-white/20' : 'bg-black/5 group-hover:bg-black/10'}
@@ -237,135 +246,121 @@ export const Tile: React.FC<TileProps> = ({
                 }`}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
+              transition={{ duration: 0.2 }}
             >
               <X className="w-5 h-5 md:w-6 md:h-6" />
             </motion.button>
           )}
         </motion.div>
 
-        {/* CLOSED STATE CONTENT */}
-        {!isSelected && (
-          <motion.div layout="position" className="flex-1 flex flex-col relative z-10 p-2 md:p-0">
-            {/* SUBTITLE */}
-            <motion.h4 className="text-[10px] md:text-xs font-bold tracking-widest uppercase mb-2 opacity-70">
-              {item.subtitle}
-            </motion.h4>
+        {/* PERSISTENT TITLE & SUBTITLE */}
+        <motion.div layout="position" className="mb-2 relative z-10 flex-shrink-0">
+          <motion.h4 className="text-[10px] md:text-xs font-bold tracking-widest uppercase mb-1 opacity-70">
+            {item.subtitle}
+          </motion.h4>
+          <motion.h2 className={`font-display font-extrabold leading-tight break-words ${cols === 1 && rows === 1 ? 'text-lg md:text-xl' :
+            cols === 1 ? 'text-xl md:text-2xl' :
+              rows === 1 ? 'text-2xl md:text-3xl' :
+                'text-3xl md:text-5xl'
+            }`}>
+            {item.title}
+          </motion.h2>
+        </motion.div>
 
-            {/* TITLE */}
-            <motion.h2 className={`font-display font-extrabold leading-tight break-words ${cols === 1 && rows === 1 ? 'text-lg md:text-xl' :
-              cols === 1 ? 'text-xl md:text-2xl' :
-                rows === 1 ? 'text-2xl md:text-3xl' :
-                  'text-3xl md:text-5xl'
-              }`}>
-              {item.title}
-            </motion.h2>
-
-            {/* EXTRA CONTEXT FOR LARGE TILES - ONLY SHOW IF ENOUGH SPACE */}
-            {cols >= 2 && rows >= 2 && (
-              <div className="mt-auto">
-                {item.id === 'about' && (
-                  <motion.p className="text-sm font-medium opacity-80 line-clamp-3 leading-relaxed">
-                    Full-stack developer & AI engineer building production-ready apps.
-                  </motion.p>
-                )}
-                {item.id === 'featured' && (
-                  <motion.div className="flex gap-2 flex-wrap">
-                    <span className="text-[10px] bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Tech</span>
-                    <span className="text-[10px] bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Tutorials</span>
-                  </motion.div>
-                )}
-                {item.id === 'skills' && (
-                  <div className="absolute bottom-4 right-4 text-black/20">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentIconIndex}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {stackIcons[currentIconIndex]}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* MUSIC VISUALIZER */}
-            {item.id === 'music' && (
-              <div className="absolute bottom-1 right-1 flex items-end gap-1 h-8">
-                {isPlaying ? (
-                  [1, 2, 3, 4].map((i) => (
-                    <motion.div
-                      key={i}
-                      className="w-1.5 bg-white rounded-full"
-                      animate={{ height: [8, 24, 8] }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 0.8,
-                        delay: i * 0.1,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  ))
-                ) : (
-                  <AudioWaveform className="w-8 h-8 opacity-50" />
-                )}
-              </div>
-            )}
-
-            {/* SKILLS TILE SLIDESHOW - SHOW IN CLOSED STATE */}
-            {item.id === 'skills' && !isSelected && !(cols >= 2 && rows >= 2) && ( // Show for any non-large tile (1x1, 2x1, 3x1)
-              <div className="absolute bottom-4 right-4 text-black/20">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentIconIndex}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {stackIcons[currentIconIndex]}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            )}
-          </motion.div>
-        )}
-
-        {/* EXPANDED TITLE HEADER */}
-        {isSelected && (
-          <motion.div layout="position" className="mb-4 relative z-10">
-            <motion.h4 className="text-sm font-bold tracking-widest uppercase mb-2 opacity-60">
-              {item.subtitle}
-            </motion.h4>
-            <motion.h2 className="text-3xl md:text-5xl font-display font-extrabold leading-none">
-              {item.title}
-            </motion.h2>
-          </motion.div>
-        )}
-
-        {/* DECORATIVE GRADIENT OVERLAYS */}
-        {!isSelected && (
-          <motion.div
-            className="absolute inset-0 z-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          />
-        )}
-
-        {/* EXPANDED CONTENT */}
-        <AnimatePresence>
-          {isSelected && (
+        {/* CONTENT SWITCHER */}
+        <AnimatePresence mode="popLayout">
+          {!isSelected ? (
             <motion.div
+              key="closed-content"
+              layout="position"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex-1 flex flex-col relative z-10 p-2 md:p-0"
+            >
+              {/* EXTRA CONTEXT FOR LARGE TILES - ONLY SHOW IF ENOUGH SPACE */}
+              {cols >= 2 && rows >= 2 && (
+                <div className="mt-auto">
+                  {item.id === 'about' && (
+                    <motion.p className="text-sm font-medium opacity-80 line-clamp-3 leading-relaxed">
+                      Full-stack developer & AI engineer building production-ready apps.
+                    </motion.p>
+                  )}
+                  {item.id === 'featured' && (
+                    <motion.div className="flex gap-2 flex-wrap">
+                      <span className="text-[10px] bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Tech</span>
+                      <span className="text-[10px] bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Tutorials</span>
+                    </motion.div>
+                  )}
+                  {item.id === 'skills' && (
+                    <div className="absolute bottom-4 right-4 text-black/20">
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={currentIconIndex}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {stackIcons[currentIconIndex]}
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* MUSIC VISUALIZER */}
+              {item.id === 'music' && (
+                <div className="absolute bottom-1 right-1 flex items-end gap-1 h-8">
+                  {isPlaying ? (
+                    [1, 2, 3, 4].map((i) => (
+                      <motion.div
+                        key={i}
+                        className="w-1.5 bg-white rounded-full"
+                        animate={{ height: [8, 24, 8] }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 0.8,
+                          delay: i * 0.1,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    ))
+                  ) : (
+                    <AudioWaveform className="w-8 h-8 opacity-50" />
+                  )}
+                </div>
+              )}
+
+              {/* SKILLS TILE SLIDESHOW - SHOW IN CLOSED STATE */}
+              {item.id === 'skills' && !isSelected && !(cols >= 2 && rows >= 2) && ( // Show for any non-large tile (1x1, 2x1, 3x1)
+                <div className="absolute bottom-4 right-4 text-black/20">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentIconIndex}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {stackIcons[currentIconIndex]}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="expanded-content"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
+              exit={{ opacity: 0 }}
               transition={{ delay: 0.2, duration: 0.4 }}
-              className="flex-1 overflow-y-auto pr-2"
+              className="flex-1 overflow-y-auto pr-2 flex flex-col"
             >
               <div className="max-w-3xl h-full flex flex-col">
-
                 {item.contentType === 'text' && (
                   <div className="prose prose-lg max-w-none">
                     <FormattedText
@@ -444,6 +439,13 @@ export const Tile: React.FC<TileProps> = ({
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* DECORATIVE GRADIENT OVERLAYS */}
+        {!isSelected && (
+          <motion.div
+            className="absolute inset-0 z-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          />
+        )}
       </div>
     </motion.div>
   );
