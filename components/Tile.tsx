@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PortfolioItem, TileSize, TileLayout } from '../types';
-import { ArrowUpRight, X, Mail, MapPin, Database, Server, Globe, Cpu, Cloud, Smartphone } from 'lucide-react';
+import { ArrowUpRight, X, Mail, MapPin, Database, Server, Globe, Cpu, Cloud, Smartphone, Play, Pause, AudioWaveform } from 'lucide-react';
 import { ChatInterface } from './ChatInterface';
 import { GitHubContributions } from './GitHubContributions';
 import { BlogPreview } from './BlogPreview';
@@ -33,6 +33,61 @@ const colClasses: Record<number, string> = {
 const rowClasses: Record<number, string> = {
   1: 'row-span-1', 2: 'row-span-2', 3: 'row-span-3', 4: 'row-span-4', 5: 'row-span-5',
 };
+
+// Basic Markdown Parser Component
+const FormattedText: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+  return (
+    <div className={className}>
+      {lines.map((line, i) => {
+        // Handle bold: **text**
+        const boldRegex = /\*\*(.*?)\*\*/g;
+        const hasBold = boldRegex.test(line);
+
+        let content: React.ReactNode = line;
+
+        if (hasBold) {
+          const parts = line.split(boldRegex); // Split by bold markers
+          // Parts will be: [pre, bolded, post, bolded, post...]
+          // But valid split with capture group puts captured content in array
+          // e.g. "a **b** c" -> ["a ", "b", " c"]
+          // Logic: Every ODD index is a match.
+          content = parts.map((part, index) => {
+            return index % 2 === 1 ? <strong key={index}>{part}</strong> : part;
+          });
+        }
+
+        // Handle List Items
+        if (line.trim().startsWith('•') || line.trim().startsWith('- ')) {
+          const listContent = line.replace(/^[•-]\s*/, '');
+          // Apply bold parsing to list content too
+          let finalContent: React.ReactNode = listContent;
+          if (boldRegex.test(listContent)) {
+            const parts = listContent.split(boldRegex);
+            finalContent = parts.map((part, index) => index % 2 === 1 ? <strong key={index}>{part}</strong> : part);
+          }
+
+          return (
+            <div key={i} className="flex gap-2 mb-1 pl-2">
+              <span className="opacity-60">•</span>
+              <span>{finalContent}</span>
+            </div>
+          );
+        }
+
+        // Regular paragraph line
+        return (
+          <p key={i} className="mb-2 min-h-[1em]">
+            {content}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
 
 export const Tile: React.FC<TileProps> = ({
   item, index, onClick, onClose, isSelected, isSpotlightActive, customLayout
@@ -91,6 +146,9 @@ export const Tile: React.FC<TileProps> = ({
     <Smartphone key="mobile" className="w-8 h-8 md:w-10 md:h-10" />
   ];
 
+  // Music Player State
+  const [isPlaying, setIsPlaying] = React.useState(false);
+
   React.useEffect(() => {
     if (item.id === 'skills' && !isSelected) {
       const interval = setInterval(() => {
@@ -100,11 +158,22 @@ export const Tile: React.FC<TileProps> = ({
     }
   }, [item.id, isSelected]);
 
+  const handleTileClick = () => {
+    if (isSelected) return;
+
+    if (item.id === 'music') {
+      setIsPlaying(!isPlaying);
+      return; // Do NOT expand music tile
+    }
+
+    onClick(item.id);
+  };
+
   return (
     <motion.div
       layout
       layoutId={`tile-${item.id}`}
-      onClick={() => !isSelected && onClick(item.id)}
+      onClick={handleTileClick}
       className={`relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden cursor-pointer shadow-lg transition-shadow duration-300 group ${gridClasses} ${!isSelected && isSpotlightActive ? 'opacity-80 hover:opacity-100' : ''
         }`}
       style={positionStyle}
@@ -133,7 +202,11 @@ export const Tile: React.FC<TileProps> = ({
               whileHover={{ opacity: 1, scale: 1.1 }}
               className={`rounded-full p-2 ${item.textColor === 'white' ? 'bg-white text-black' : 'bg-black text-white'}`}
             >
-              <ArrowUpRight className="w-4 h-4" />
+              {item.id === 'music' ? (
+                isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />
+              ) : (
+                <ArrowUpRight className="w-4 h-4" />
+              )}
             </motion.div>
           ) : (
             <motion.button
@@ -161,9 +234,9 @@ export const Tile: React.FC<TileProps> = ({
 
             {/* TITLE */}
             <motion.h2 className={`font-display font-extrabold leading-tight break-words ${cols === 1 && rows === 1 ? 'text-lg md:text-xl' :
-              cols === 1 ? 'text-xl md:text-2xl' :
-                rows === 1 ? 'text-2xl md:text-3xl' :
-                  'text-3xl md:text-5xl'
+                cols === 1 ? 'text-xl md:text-2xl' :
+                  rows === 1 ? 'text-2xl md:text-3xl' :
+                    'text-3xl md:text-5xl'
               }`}>
               {item.title}
             </motion.h2>
@@ -196,6 +269,29 @@ export const Tile: React.FC<TileProps> = ({
                       </motion.div>
                     </AnimatePresence>
                   </div>
+                )}
+              </div>
+            )}
+
+            {/* MUSIC VISUALIZER */}
+            {item.id === 'music' && (
+              <div className="absolute bottom-1 right-1 flex items-end gap-1 h-8">
+                {isPlaying ? (
+                  [1, 2, 3, 4].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1.5 bg-white rounded-full"
+                      animate={{ height: [8, 24, 8] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 0.8,
+                        delay: i * 0.1,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  ))
+                ) : (
+                  <AudioWaveform className="w-8 h-8 opacity-50" />
                 )}
               </div>
             )}
@@ -252,9 +348,11 @@ export const Tile: React.FC<TileProps> = ({
 
                 {item.contentType === 'text' && (
                   <div className="prose prose-lg max-w-none">
-                    <p className={`whitespace-pre-wrap text-sm md:text-base leading-relaxed ${item.textColor === 'white' ? 'text-white/90' : 'text-black/80'}`}>
-                      {item.description}
-                    </p>
+                    <FormattedText
+                      text={item.description || ''}
+                      className={`text-sm md:text-base leading-relaxed ${item.textColor === 'white' ? 'text-white/90' : 'text-black/80'}`}
+                    />
+
                     {item.id === 'skills' && (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                         {['React', 'TypeScript', 'Tailwind', 'Node.js', 'Framer Motion', 'Three.js'].map(skill => (
