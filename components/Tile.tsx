@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PortfolioItem, TileSize, TileLayout } from '../types';
-import { ArrowUpRight, X, Mail, MapPin } from 'lucide-react';
+import { ArrowUpRight, X, Mail, MapPin, Database, Server, Globe, Cpu, Cloud, Smartphone } from 'lucide-react';
 import { ChatInterface } from './ChatInterface';
 import { GitHubContributions } from './GitHubContributions';
 import { BlogPreview } from './BlogPreview';
@@ -80,6 +80,26 @@ export const Tile: React.FC<TileProps> = ({
     positionStyle.order = customLayout.order;
   }
 
+  // Icon Slideshow for Skills Tile
+  const [currentIconIndex, setCurrentIconIndex] = React.useState(0);
+  const stackIcons = [
+    <Database key="db" className="w-8 h-8 md:w-10 md:h-10" />,
+    <Globe key="web" className="w-8 h-8 md:w-10 md:h-10" />,
+    <Server key="server" className="w-8 h-8 md:w-10 md:h-10" />,
+    <Cpu key="cpu" className="w-8 h-8 md:w-10 md:h-10" />,
+    <Cloud key="cloud" className="w-8 h-8 md:w-10 md:h-10" />,
+    <Smartphone key="mobile" className="w-8 h-8 md:w-10 md:h-10" />
+  ];
+
+  React.useEffect(() => {
+    if (item.id === 'skills' && !isSelected) {
+      const interval = setInterval(() => {
+        setCurrentIconIndex((prev) => (prev + 1) % stackIcons.length);
+      }, 2500);
+      return () => clearInterval(interval);
+    }
+  }, [item.id, isSelected]);
+
   return (
     <motion.div
       layout
@@ -141,9 +161,9 @@ export const Tile: React.FC<TileProps> = ({
 
             {/* TITLE */}
             <motion.h2 className={`font-display font-extrabold leading-tight break-words ${cols === 1 && rows === 1 ? 'text-lg md:text-xl' :
-                cols === 1 ? 'text-xl md:text-2xl' :
-                  rows === 1 ? 'text-2xl md:text-3xl' :
-                    'text-3xl md:text-5xl'
+              cols === 1 ? 'text-xl md:text-2xl' :
+                rows === 1 ? 'text-2xl md:text-3xl' :
+                  'text-3xl md:text-5xl'
               }`}>
               {item.title}
             </motion.h2>
@@ -162,6 +182,38 @@ export const Tile: React.FC<TileProps> = ({
                     <span className="text-[10px] bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">Tutorials</span>
                   </motion.div>
                 )}
+                {item.id === 'skills' && (
+                  <div className="absolute bottom-4 right-4 text-black/20">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentIconIndex}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {stackIcons[currentIconIndex]}
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* SKILLS TILE SLIDESHOW - SHOW IN CLOSED STATE */}
+            {item.id === 'skills' && !isSelected && !(cols >= 2 && rows >= 2) && ( // Show for any non-large tile (1x1, 2x1, 3x1)
+              <div className="absolute bottom-4 right-4 text-black/20">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentIconIndex}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {stackIcons[currentIconIndex]}
+                  </motion.div>
+                </AnimatePresence>
               </div>
             )}
           </motion.div>
