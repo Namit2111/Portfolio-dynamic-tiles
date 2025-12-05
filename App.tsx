@@ -22,16 +22,17 @@ const App: React.FC<AppProps> = ({ customLayoutConfig }) => {
     : layoutConfig.default;
 
   return (
-    <div className="h-screen w-screen bg-[#111] text-neutral-100 font-sans selection:bg-white/30 overflow-hidden">
+    <div className="h-screen w-screen bg-[#111] text-neutral-100 font-sans selection:bg-white/30 overflow-y-auto overflow-x-hidden">
       <LayoutGroup>
         <motion.div
           layout
           className={`
-            h-full w-full p-4 md:p-6 gap-3 md:gap-4
+            min-h-full w-full p-4 md:p-6 gap-3 md:gap-4
             grid grid-flow-dense transition-all duration-500 ease-in-out
+            grid-cols-1 md:grid-flow-dense
             ${selectedId
-              ? 'grid-cols-7 grid-rows-5'
-              : 'grid-cols-2 md:grid-cols-7 grid-rows-6 md:grid-rows-5'
+              ? 'md:grid-cols-7 md:grid-rows-5' // Desktop: Explicit 7x5 when expanded
+              : 'md:grid-cols-7 md:grid-rows-5' // Desktop: Default 7x5
             }
           `}
         >

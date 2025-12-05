@@ -116,7 +116,16 @@ export const Tile: React.FC<TileProps> = ({
     rows = defaultSize.rows;
   }
 
-  const gridClasses = `${colClasses[cols] || 'col-span-1'} ${rowClasses[rows] || 'row-span-1'}`;
+  const gridClasses = `col-span-1 md:${colClasses[cols] || 'col-span-1'} ${rowClasses[rows] || 'row-span-1'}`;
+
+  // Handle responsive layout: Only apply grid positioning on Desktop
+  const [isDesktop, setIsDesktop] = React.useState(typeof window !== 'undefined' ? window.innerWidth >= 768 : true);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Build inline styles for positioning
   const positionStyle: React.CSSProperties = {
@@ -124,15 +133,26 @@ export const Tile: React.FC<TileProps> = ({
     color: item.textColor === 'white' ? '#fff' : '#000',
   };
 
-  // Add exact grid positioning if specified in customLayout
-  if (customLayout?.colStart) {
-    positionStyle.gridColumnStart = customLayout.colStart;
-  }
-  if (customLayout?.rowStart) {
-    positionStyle.gridRowStart = customLayout.rowStart;
-  }
-  if (customLayout?.order !== undefined) {
-    positionStyle.order = customLayout.order;
+  // Add exact grid positioning if specified in customLayout (ONLY ON DESKTOP)
+  if (isDesktop) {
+    if (customLayout?.colStart) {
+      positionStyle.gridColumnStart = customLayout.colStart;
+    }
+    if (customLayout?.rowStart) {
+      positionStyle.gridRowStart = customLayout.rowStart;
+    }
+    if (customLayout?.order !== undefined) {
+      positionStyle.order = customLayout.order;
+    }
+  } else {
+    // Mobile: Force order if needed, otherwise natural flow
+    // We want expandable tiles to push content down.
+    // In a 1-col grid, expanding height does this automatically.
+    if (isSelected) {
+      positionStyle.minHeight = '60vh'; // Make opened tile tall on mobile
+    } else {
+      positionStyle.minHeight = '200px'; // Basic execution tile height
+    }
   }
 
   // Icon Slideshow for Skills Tile
@@ -234,9 +254,9 @@ export const Tile: React.FC<TileProps> = ({
 
             {/* TITLE */}
             <motion.h2 className={`font-display font-extrabold leading-tight break-words ${cols === 1 && rows === 1 ? 'text-lg md:text-xl' :
-                cols === 1 ? 'text-xl md:text-2xl' :
-                  rows === 1 ? 'text-2xl md:text-3xl' :
-                    'text-3xl md:text-5xl'
+              cols === 1 ? 'text-xl md:text-2xl' :
+                rows === 1 ? 'text-2xl md:text-3xl' :
+                  'text-3xl md:text-5xl'
               }`}>
               {item.title}
             </motion.h2>

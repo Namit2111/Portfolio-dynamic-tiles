@@ -31,7 +31,7 @@ import { Code, User, Mail, Cpu, Layers, Image as ImageIcon, BookOpen, Github, Fi
 // 9. Playground/Settings/Extras (2x1) - Row 4, right
 
 export const PORTFOLIO_ITEMS: PortfolioItem[] = [
-  // ROW 1-2: GitHub (2x2) | About Me (2x2) | Featured Project (2x2)
+  // 1. GitHub (Top priority for mobile)
   {
     id: 'github',
     title: 'GitHub',
@@ -44,18 +44,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     expandedCols: 4,
     expandedRows: 3,
   },
-  {
-    id: 'music',
-    title: 'Music',
-    subtitle: 'Vibes',
-    size: TileSize.Large,
-    contentType: 'github', // Keeping as placeholder/github for now as no specific music data provided
-    color: '#1DB954', // Spotify Green
-    textColor: 'white',
-    icon: <Music className="w-8 h-8" />,
-    expandedCols: 4,
-    expandedRows: 3,
-  },
+  // 2. About Me
   {
     id: 'about',
     title: "Hi, I'm Namit",
@@ -73,47 +62,7 @@ Currently working as a Founding Engineer at oncourseAI.`,
     expandedCols: 4,
     expandedRows: 3,
   },
-  {
-    id: 'featured',
-    title: 'Blog',
-    subtitle: 'Writing',
-    size: TileSize.Large,
-    contentType: 'blog',
-    color: '#FF6B6B',
-    textColor: 'white',
-    icon: <BookOpen className="w-8 h-8" />,
-    expandedCols: 4,
-    expandedRows: 3,
-  },
-  // ROW 3: Projects (2x1) | Skills (1x1) | Experience (1x1) | Contact (1x1)
-  {
-    id: 'projects',
-    title: 'Work',
-    subtitle: 'Projects',
-    size: TileSize.Wide,
-    contentType: 'projects',
-    color: '#2ECC71',
-    textColor: 'black',
-    icon: <Layers className="w-8 h-8" />,
-    expandedCols: 4,
-    expandedRows: 3,
-  },
-  {
-    id: 'skills',
-    title: 'Stack',
-    subtitle: 'Expertise',
-    size: TileSize.Small,
-    contentType: 'text',
-    color: '#FFD500',
-    textColor: 'black',
-    icon: <Code className="w-8 h-8" />,
-    description: `**Frontend**: React.js, Next.js, TypeScript, React Native, Tailwind CSS, Material UI, Redux
-**Backend**: Node.js, Express.js, Python, Flask, FastAPI, GraphQL, MongoDB, PostgreSQL, Redis
-**AI/ML**: Azure OpenAI, LangChain, Hugging Face, Ollama, CrewAI, NLP, Computer Vision, Vector DBs
-**DevOps**: AWS, Docker, GitHub Actions, CI/CD, Git`,
-    expandedCols: 4,
-    expandedRows: 3,
-  },
+  // 3. Experience (Career)
   {
     id: 'experience',
     title: 'Career',
@@ -137,19 +86,50 @@ Built scalable pipelines for 50K+ records.`,
     expandedCols: 4,
     expandedRows: 3,
   },
+  // 4. Projects (Work)
   {
-    id: 'contact',
-    title: 'Contact',
-    subtitle: 'Hire Me',
-    size: TileSize.Small,
-    contentType: 'contact',
-    color: '#FFFFFF',
+    id: 'projects',
+    title: 'Work',
+    subtitle: 'Projects',
+    size: TileSize.Wide,
+    contentType: 'projects',
+    color: '#2ECC71',
     textColor: 'black',
-    icon: <Mail className="w-8 h-8" />,
+    icon: <Layers className="w-8 h-8" />,
     expandedCols: 4,
     expandedRows: 3,
   },
-  // ROW 4: Resume (2x1) | Playground/Settings (2x1)
+  // 5. Skills (Stack)
+  {
+    id: 'skills',
+    title: 'Stack',
+    subtitle: 'Expertise',
+    size: TileSize.Small,
+    contentType: 'text',
+    color: '#FFD500',
+    textColor: 'black',
+    icon: <Code className="w-8 h-8" />,
+    description: `**Frontend**: React.js, Next.js, TypeScript, React Native, Tailwind CSS, Material UI, Redux
+**Backend**: Node.js, Express.js, Python, Flask, FastAPI, GraphQL, MongoDB, PostgreSQL, Redis
+**AI/ML**: Azure OpenAI, LangChain, Hugging Face, Ollama, CrewAI, NLP, Computer Vision, Vector DBs
+**DevOps**: AWS, Docker, GitHub Actions, CI/CD, Git`,
+    expandedCols: 4,
+    expandedRows: 3,
+  },
+  // 6. Blog (Featured)
+  {
+    id: 'featured',
+    title: 'Blog',
+    subtitle: 'Writing',
+    size: TileSize.Large,
+    contentType: 'blog',
+    color: '#FF6B6B',
+    textColor: 'white',
+    icon: <BookOpen className="w-8 h-8" />,
+    expandedCols: 4,
+    expandedRows: 3,
+  },
+  // 7. Resume
   {
     id: 'resume',
     title: 'Resume',
@@ -163,6 +143,20 @@ Built scalable pipelines for 50K+ records.`,
     expandedCols: 4,
     expandedRows: 3,
   },
+  // 8. Contact
+  {
+    id: 'contact',
+    title: 'Contact',
+    subtitle: 'Hire Me',
+    size: TileSize.Small,
+    contentType: 'contact',
+    color: '#FFFFFF',
+    textColor: 'black',
+    icon: <Mail className="w-8 h-8" />,
+    expandedCols: 4,
+    expandedRows: 3,
+  },
+  // 9. Extra/Playground
   {
     id: 'playground',
     title: 'Extras',
@@ -172,6 +166,19 @@ Built scalable pipelines for 50K+ records.`,
     color: '#1F77FF',
     textColor: 'white',
     icon: <Settings className="w-8 h-8" />,
+    expandedCols: 4,
+    expandedRows: 3,
+  },
+  // 10. Music - Moved to end as likely secondary to professional info
+  {
+    id: 'music',
+    title: 'Music',
+    subtitle: 'Vibes',
+    size: TileSize.Large,
+    contentType: 'github', // Keeping as placeholder
+    color: '#1DB954',
+    textColor: 'white',
+    icon: <Music className="w-8 h-8" />,
     expandedCols: 4,
     expandedRows: 3,
   },
