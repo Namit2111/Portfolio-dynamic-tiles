@@ -1,6 +1,6 @@
 import React from 'react';
 import { PortfolioItem, TileSize } from './types';
-import { Code, User, Mail, Cpu, Layers, Image as ImageIcon, BookOpen, Github, FileText, Briefcase, Settings } from 'lucide-react';
+import { Code, User, Mail, Cpu, Layers, Image as ImageIcon, BookOpen, Github, FileText, Briefcase, Settings, Music } from 'lucide-react';
 
 // LAYOUT EXPLANATION:
 // Grid is 6 columns x 4 rows (on desktop) = 24 cells total
@@ -44,6 +44,17 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     expandedCols: 4,
     expandedRows: 3,
   },
+  {
+    id: 'music',
+    title: 'Music',
+    subtitle: 'namit2111',
+    size: TileSize.Large,
+    contentType: 'github',
+    color: '#106305ff',
+    textColor: 'white',
+    icon: <Music className="w-8 h-8" />,
+    expandedCols: 4,
+    expandedRows: 3,},
   {
     id: 'about',
     title: 'Hello.',

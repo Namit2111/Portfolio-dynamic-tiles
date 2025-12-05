@@ -20,18 +20,19 @@ import { LayoutConfig } from './types';
 export const LAYOUT_CONFIG: LayoutConfig = {
     // DEFAULT BENTO LAYOUT (nothing expanded)
 default: {
-  projects: { cols: 3, rows: 2, colStart: 1, rowStart: 1 },      // Top-left (Green Work)
-  about: { cols: 2, rows: 3, colStart: 3, rowStart: 3 },         // CENTER HERO - Vertical Long (Red)
-  github: { cols: 3, rows: 2, colStart: 4, rowStart: 1 },        // Top-right (Dark GitHub)
+  experience: { cols: 2, rows: 3, colStart: 1, rowStart: 1 },      // Top-left (Green Work)
+  about: { cols: 3, rows: 3, colStart: 3, rowStart: 2 },         // CENTER HERO - Vertical Long (Red)
+  github: { cols: 3, rows: 1, colStart: 3, rowStart: 1 },        // Top-right (Dark GitHub)
   
-  featured: { cols: 2, rows: 2, colStart: 1, rowStart: 3 },      // Middle-left (Coral Featured)
-  skills: { cols: 1, rows: 4, colStart: 7, rowStart: 1 },        // Middle-right top (Yellow Stack)
+  featured: { cols: 2, rows: 2, colStart: 1, rowStart: 4 },      // Middle-left (Coral Featured)
+  contact: { cols: 1, rows: 2, colStart:6, rowStart: 3 },        // Middle-right top (Yellow Stack)
   
-  experience: { cols: 2, rows: 2, colStart: 5, rowStart: 4 },    // CENTER BOTTOM - Horizontal Long (Purple Career)
-  playground: { cols: 1, rows: 1, colStart: 7, rowStart: 5 },    // Middle-right bottom (Blue Playground)
+  projects: { cols: 2, rows: 2, colStart: 6, rowStart: 1 },    // CENTER BOTTOM - Horizontal Long (Purple Career)
+  playground: { cols: 1, rows:1, colStart: 7, rowStart: 3 },    // Middle-right bottom (Blue Playground)
   
-  resume: { cols: 2, rows: 1, colStart: 1, rowStart: 5 },        // Bottom-left (Gray CV)
-  contact: { cols: 2, rows: 1, colStart: 5, rowStart: 3 },       // Bottom-right (White Hire Me)
+  resume: { cols: 2, rows: 1, colStart: 3, rowStart: 5 },        // Bottom-left (Gray CV)
+  skills: { cols: 2, rows: 1, colStart: 5, rowStart: 5 }, 
+  music:{cols:1,rows:2,rowStart:4,colStart:7}      // Bottom-right (White Hire Me)
 },
     // GITHUB EXPANDED (5x4)
     featured: {
