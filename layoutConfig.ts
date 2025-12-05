@@ -22,16 +22,16 @@ export const LAYOUT_CONFIG: LayoutConfig = {
 
   // DEFAULT LAYOUT (7x5 grid)
   default: {
-    experience: { cols: 2, rows: 3, colStart: 1, rowStart: 1 },
+    experience: { cols: 2, rows: 2, colStart: 1, rowStart: 1 },
     about: { cols: 3, rows: 3, colStart: 3, rowStart: 2 },
     github: { cols: 3, rows: 1, colStart: 3, rowStart: 1 },
     featured: { cols: 2, rows: 2, colStart: 1, rowStart: 4 },
     contact: { cols: 1, rows: 2, colStart: 6, rowStart: 3 },
     projects: { cols: 2, rows: 2, colStart: 6, rowStart: 1 },
-    playground: { cols: 1, rows: 1, colStart: 7, rowStart: 3 },
+    playground: { cols: 1, rows: 2, colStart: 7, rowStart: 3 },
     resume: { cols: 2, rows: 1, colStart: 3, rowStart: 5 },
-    skills: { cols: 2, rows: 1, colStart: 5, rowStart: 5 },
-    music: { cols: 1, rows: 2, colStart: 7, rowStart: 4 }
+    music: { cols: 2, rows: 1, colStart: 1, rowStart: 3 },
+    skills: { cols: 3, rows: 1, colStart: 5, rowStart: 5 }
   },
 
   // FEATURED EXPANDED (5x4)
